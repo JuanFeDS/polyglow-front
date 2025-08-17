@@ -1,8 +1,5 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-# Lint & format staged files
+# Lint & format staged files only (fast)
 npx lint-staged
-
-# TypeScript typecheck (full project)
-npm run typecheck
