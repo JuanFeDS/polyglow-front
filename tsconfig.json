@@ -11,7 +11,7 @@
       "@/hooks/*": ["hooks/*"],
       "@/constants/*": ["constants/*"]
     },
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
     "jsx": "react-native",
     "skipLibCheck": true,
