@@ -4,12 +4,12 @@
     "strict": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["*"],
       "@/screens/*": ["src/screens/*"],
       "@/components/*": ["components/*"],
       "@/navigation/*": ["src/navigation/*"],
       "@/hooks/*": ["hooks/*"],
-      "@/constants/*": ["constants/*"]
+      "@/constants/*": ["constants/*"],
+      "@/assets/*": ["assets/*"]
     },
     "moduleResolution": "bundler",
     "esModuleInterop": true,

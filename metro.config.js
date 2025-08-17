@@ -5,12 +5,12 @@ const { getDefaultConfig } = require('@expo/metro-config');
 const config = getDefaultConfig(__dirname);
 
 config.resolver.alias = {
-  '@': '.',
   '@/screens': './src/screens',
   '@/navigation': './src/navigation',
   '@/components': './components',
   '@/hooks': './hooks',
   '@/constants': './constants',
+  '@/assets': './assets',
 };
 
 module.exports = config;
