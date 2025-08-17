@@ -8,7 +8,8 @@
       "@/screens/*": ["src/screens/*"],
       "@/components/*": ["components/*"],
       "@/navigation/*": ["src/navigation/*"],
-      "@/hooks/*": ["hooks/*"]
+      "@/hooks/*": ["hooks/*"],
+      "@/constants/*": ["constants/*"]
     },
     "moduleResolution": "node",
     "esModuleInterop": true,
