@@ -6,8 +6,9 @@
     "paths": {
       "@/*": ["src/*"],
       "@/screens/*": ["src/screens/*"],
-      "@/components/*": ["src/components/*"],
-      "@/navigation/*": ["src/navigation/*"]
+      "@/components/*": ["components/*"],
+      "@/navigation/*": ["src/navigation/*"],
+      "@/hooks/*": ["hooks/*"]
     },
     "moduleResolution": "node",
     "esModuleInterop": true,
