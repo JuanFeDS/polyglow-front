@@ -48,7 +48,7 @@ jobs:
       - name: Type check
         run: npx tsc -p tsconfig.json --noEmit
       - name: Build (export web)
-        run: npx expo export --platform web --output-dir dist
+        run: npx expo export --platform web --output-dir dist --base-url /polyglow-front/
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Add 404.html for SPA routing
