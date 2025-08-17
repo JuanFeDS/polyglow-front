@@ -9,7 +9,8 @@
       "@/navigation/*": ["src/navigation/*"],
       "@/hooks/*": ["hooks/*"],
       "@/constants/*": ["constants/*"],
-      "@/assets/*": ["assets/*"]
+      "@/assets/*": ["assets/*"],
+      "@/state/*": ["src/state/*"]
     },
     "moduleResolution": "bundler",
     "esModuleInterop": true,

@@ -5,11 +5,13 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from '@/screens/HomeScreen';
 import SessionScreen from '@/screens/SessionScreen';
 import ProgressScreen from '@/screens/ProgressScreen';
+import PlanScreen from '@/screens/PlanScreen';
 
 export type RootStackParamList = {
   Home: undefined;
   Session: undefined;
   Progress: undefined;
+  Plan: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -41,6 +43,11 @@ const AppNavigator = () => {
         name="Progress" 
         component={ProgressScreen} 
         options={{ title: 'Mi Progreso' }} 
+      />
+      <Stack.Screen 
+        name="Plan" 
+        component={PlanScreen} 
+        options={{ title: 'Plan del día' }} 
       />
     </Stack.Navigator>
   );

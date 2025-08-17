@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
+import PlanIndicator from '@/components/PlanIndicator';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
@@ -10,6 +11,7 @@ const HomeScreen = ({ navigation }: Props) => {
     <View style={styles.container}>
       <Text style={styles.title}>¡Bienvenido a Polyglow!</Text>
       <Text style={styles.subtitle}>Aprende inglés técnico de manera divertida</Text>
+      <PlanIndicator onPress={() => navigation.navigate('Plan')} />
       
       <View style={styles.buttonContainer}>
         <TouchableOpacity 
@@ -24,6 +26,13 @@ const HomeScreen = ({ navigation }: Props) => {
           onPress={() => navigation.navigate('Progress')}
         >
           <Text style={[styles.buttonText, styles.secondaryButtonText]}>Mi Progreso</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+          style={[styles.button, styles.planButton]}
+          onPress={() => navigation.navigate('Plan')}
+        >
+          <Text style={styles.buttonText}>Plan del día</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -74,6 +83,9 @@ const styles = StyleSheet.create({
   },
   secondaryButtonText: {
     color: '#f4511e',
+  },
+  planButton: {
+    backgroundColor: '#1e88e5',
   },
 });
 
