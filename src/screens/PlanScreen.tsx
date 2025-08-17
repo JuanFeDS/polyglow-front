@@ -102,7 +102,7 @@ const PlanScreen = () => {
         />)
         : (
         <Text style={styles.helper}>
-          Ingresa minutos y presiona "Generar plan" para ver tus bloques.
+          Ingresa minutos y presiona &quot;Generar plan&quot; para ver tus bloques.
         </Text>
       )}
 
