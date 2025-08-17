@@ -8,7 +8,7 @@ module.exports = function (api) {
         {
           extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
           alias: {
-            '@': './src',
+            '@': '.',
             '@/screens': './src/screens',
             '@/navigation': './src/navigation',
             '@/components': './components',
