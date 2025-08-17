@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { View, Text, TextInput, TouchableOpacity, FlatList, ScrollView } from 'react-native';
 import { styles } from './PlanScreen.styles';
-import { setDailyPlan } from '@/state/planStore';
+import { setDailyPlan, confirmDailyPlan } from '@/state/planStore';
 
 type Block = {
   id: string;
@@ -28,30 +28,35 @@ const PlanScreen = () => {
       return;
     }
 
-    // Lógica inicial sencilla: distribuir en 3 bloques base y adaptar proporciones
-    // 40% vocabulario, 40% práctica rápida, 20% repaso. Asegurar mínimos de 5 min cuando sea posible.
-    const vocab = Math.max(5, Math.floor(m * 0.4));
-    const practice = Math.max(5, Math.floor(m * 0.4));
-    let review = m - vocab - practice;
+    // Distribución exacta con Largest Remainder Method (40/40/20)
+    const weights = [0.4, 0.4, 0.2];
+    const ids = ['vocab', 'quick', 'streak'] as const;
+    const titles = ['Vocabulario', 'Práctica rápida', 'Repaso de racha'];
 
-    // Ajustes si el total no cuadra o si m es pequeño
-    if (review < 0) review = 0;
+    const raw = weights.map((w) => m * w);
+    const base = raw.map(Math.floor);
+    let used = base.reduce((a, b) => a + b, 0);
+    let rest = m - used; // distribuir 1 min a los mayores residuales
+    const fracs = raw.map((v, i) => ({ i, frac: v - base[i] }));
+    fracs.sort((a, b) => b.frac - a.frac);
+    for (let k = 0; k < rest; k++) base[fracs[k % fracs.length].i] += 1;
 
-    const blocks: Block[] = [];
-    if (vocab > 0) blocks.push({ id: 'vocab', title: 'Vocabulario', minutes: vocab });
-    if (practice > 0) blocks.push({ id: 'quick', title: 'Práctica rápida', minutes: practice });
-
-    // Si hay tiempo suficiente, incluir repaso; de lo contrario, redistribuir
-    if (review >= 5) {
-      blocks.push({ id: 'streak', title: 'Repaso de racha', minutes: review });
-    } else if (review > 0) {
-      // Suma los minutos residuales al bloque más corto
-      const idx = blocks.reduce((minIdx, b, i, arr) => (b.minutes < arr[minIdx].minutes ? i : minIdx), 0);
-      blocks[idx] = { ...blocks[idx], minutes: blocks[idx].minutes + review };
+    // Construcción de bloques y fusión de bloques muy pequeños (<5)
+    let items: Block[] = base.map((min, idx) => ({ id: ids[idx], title: titles[idx], minutes: min }));
+    const smallIdxs = items.map((b, i) => ({ i, min: b.minutes })).filter(x => x.min > 0 && x.min < 5).map(x => x.i);
+    if (smallIdxs.length) {
+      // fusionar pequeños al bloque más grande
+      const largestIdx = items.reduce((maxIdx, b, i, arr) => (b.minutes > arr[maxIdx].minutes ? i : maxIdx), 0);
+      let added = 0;
+      smallIdxs.forEach(i => { added += items[i].minutes; items[i].minutes = 0; });
+      items[largestIdx].minutes += added;
     }
 
-    // En planes muy cortos (<10), asegurar al menos 2 bloques
-    if (m < 10 && blocks.length === 1) {
+    // Filtrar cero
+    let blocks: Block[] = items.filter(b => b.minutes > 0);
+
+    // Para planes muy cortos, intenta mantener al menos 2 bloques cuando sea razonable
+    if (m >= 10 && blocks.length === 1) {
       const half = Math.floor(blocks[0].minutes / 2);
       blocks[0].minutes = blocks[0].minutes - half;
       blocks.push({ id: 'quick-mini', title: 'Práctica rápida', minutes: half });
@@ -99,6 +104,15 @@ const PlanScreen = () => {
         <Text style={styles.helper}>
           Ingresa minutos y presiona "Generar plan" para ver tus bloques.
         </Text>
+      )}
+
+      {plan.length > 0 && (
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: '#1e88e5' }]}
+          onPress={confirmDailyPlan}
+        >
+          <Text style={styles.buttonText}>Confirmar plan</Text>
+        </TouchableOpacity>
       )}
     </ScrollView>
   );

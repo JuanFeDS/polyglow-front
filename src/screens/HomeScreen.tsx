@@ -1,17 +1,31 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import PlanIndicator from '@/components/PlanIndicator';
+import PlanSetupModal from '@/components/PlanSetupModal';
+import { getDailyPlan, subscribe } from '@/state/planStore';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 const HomeScreen = ({ navigation }: Props) => {
+  const [showSetup, setShowSetup] = useState<boolean>(false);
+
+  useEffect(() => {
+    const decide = () => {
+      const plan = getDailyPlan();
+      setShowSetup(!(plan && plan.confirmed));
+    };
+    decide();
+    const unsub = subscribe(() => decide());
+    return unsub;
+  }, []);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>¡Bienvenido a Polyglow!</Text>
       <Text style={styles.subtitle}>Aprende inglés técnico de manera divertida</Text>
-      <PlanIndicator onPress={() => navigation.navigate('Plan')} />
+      <PlanIndicator onPress={() => setShowSetup(true)} />
       
       <View style={styles.buttonContainer}>
         <TouchableOpacity 
@@ -27,14 +41,13 @@ const HomeScreen = ({ navigation }: Props) => {
         >
           <Text style={[styles.buttonText, styles.secondaryButtonText]}>Mi Progreso</Text>
         </TouchableOpacity>
-
-        <TouchableOpacity 
-          style={[styles.button, styles.planButton]}
-          onPress={() => navigation.navigate('Plan')}
-        >
-          <Text style={styles.buttonText}>Plan del día</Text>
-        </TouchableOpacity>
       </View>
+
+      <PlanSetupModal
+        visible={showSetup}
+        onClose={() => setShowSetup(false)}
+        onConfirmed={() => setShowSetup(false)}
+      />
     </View>
   );
 };
@@ -83,9 +96,6 @@ const styles = StyleSheet.create({
   },
   secondaryButtonText: {
     color: '#f4511e',
-  },
-  planButton: {
-    backgroundColor: '#1e88e5',
   },
 });
 
