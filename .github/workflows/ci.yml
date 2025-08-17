@@ -1,0 +1,46 @@
+name: Frontend CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  lint:
+    name: Lint (ESLint)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+      - name: Install dependencies
+        run: npm ci
+      - name: Run ESLint
+        run: npm run lint
+
+  build:
+    name: Build (Expo Web Export)
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+      - name: Install dependencies
+        run: npm ci
+      - name: Verify Expo CLI
+        run: npx expo --version
+      - name: Type check
+        run: npx tsc -p tsconfig.json --noEmit
+      - name: Build (export web)
+        run: npx expo export --platform web --output-dir dist
+          
